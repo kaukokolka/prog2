@@ -16,6 +16,12 @@ public class Bank
 		client1.AccountList[0].Withdraw(6);
 		client1.AccountList[0].Withdraw(45);
 		client1.AccountList[0].Withdraw(270);
+		client1.AccountList[0].Withdraw(2000);
+		
+		client2.AddAccount(new Account("LV1234567899147", "USD"));
+		
+		var transfer = new Transfer(client1.AccountList[0], client2.AccountList[0], 300);
+		transfer.Execute();
 		
 		client1.PrintAccounts();
 		client2.PrintAccounts();
@@ -122,7 +128,15 @@ public class Account
 	
 	public void Withdraw(double amount)
 	{
-		_transactionList.Add(new Transaction(amount, "withdrawal"));
+		double balance = CalculateBalance();
+		if (amount > balance)
+		{
+			Console.WriteLine($"You do not have sufficient funds, you can withdraw up to {balance} {_accountCurrency}");
+		}
+		else
+		{
+			_transactionList.Add(new Transaction(amount, "withdrawal"));	
+		}		
 	}
 	
 	public void PrintTransactions()
@@ -171,4 +185,36 @@ public class Transaction
 		_amount = amount;
 		_type = type;		
 	}
+}
+
+public class Transfer
+{
+    // Define object data fields/variables
+    private Account _sourceAccount;
+    private Account _targetAccount;
+    private double _amount;
+
+    // Define constructor
+    public Transfer(Account sourceAccount, Account targetAccount, double amount)
+    {
+        _sourceAccount = sourceAccount;
+        _targetAccount = targetAccount;
+        _amount = amount;
+    }
+
+    // Define the procedure of money transfer from one account to another
+    public void Execute()
+    {
+        if (_amount > _sourceAccount.CalculateBalance())
+        {
+            Console.WriteLine($"Error: Insufficient funds for transfer of {_amount} {_sourceAccount.AccountCurrency}.");
+            return;
+        }
+
+        // Withdraw from source account and deposit to target account
+        _sourceAccount.Withdraw(_amount);
+        _targetAccount.Deposit(_amount);
+
+        Console.WriteLine($"Successfully transferred {_amount} {_sourceAccount.AccountCurrency} from account {_sourceAccount.AccountNumber} to account {_targetAccount.AccountNumber}.");
+    }
 }
