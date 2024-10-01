@@ -6,23 +6,26 @@ public class Bank
     public static void Main(string[] args)
     {
         Console.WriteLine ("Welcome to your Bank!");
-        
+
         var client1 = new Client(1234, "Anna", "Berzina");
-		var client2 = new Client(1235, "Oskars", "Andersons");		
-		
+		var client2 = new Client(1235, "Oskars", "Andersons");
+
 		client1.AddAccount(new Account("LV1234567899876", "EUR"));
-		client1.AddAccount(new Account("US1234567899875", "USD"));		
+		client1.AddAccount(new Account("US1234567899875", "USD"));
+
+		client1.AccountList[1].Deposit(300);
 		client1.AccountList[0].Deposit(1200);
 		client1.AccountList[0].Withdraw(6);
 		client1.AccountList[0].Withdraw(45);
 		client1.AccountList[0].Withdraw(270);
 		client1.AccountList[0].Withdraw(2000);
-		
+
 		client2.AddAccount(new Account("LV1234567899147", "USD"));
-		
-		var transfer = new Transfer(client1.AccountList[0], client2.AccountList[0], 300);
-		transfer.Execute();
-		
+		client2.AddAccount(new Account("LV1234567899147", "JPY"));
+
+		var transfer = new Transfer(client1.AccountList[1], client2.AccountList[0], 300);
+		//transfer.Execute();
+
 		client1.PrintAccounts();
 		client2.PrintAccounts();
     }
@@ -31,38 +34,38 @@ public class Bank
 public class Client
 {
     public static int numberOfClients = 0;
-    
+
     private int _id;
     private string _name;
-    private string _surname;	
+    private string _surname;
 	private List<Account> _accountList = new List<Account>();
-    
+
 	public List<Account> AccountList
 	{
 		get
 		{
-			return _accountList;	
+			return _accountList;
 		}
 	}
-	
-	
+
+
     public Client(int id, string name, string surname)
     {
         _id = id;
         _name = name;
-        _surname = surname;        
+        _surname = surname;
     }
-    
+
     public void RequestInfo()
     {
         Console.WriteLine($"{_id} {_name} {_surname}");
     }
-    
+
 	public void AddAccount(Account account)
 	{
 		_accountList.Add(account);
 	}
-	
+
 	public void PrintAccounts()
 	{
 		Console.WriteLine($"Client {_name} {_surname} has the following accounts:");
@@ -71,7 +74,7 @@ public class Client
 			Console.WriteLine($"Number: {account.AccountNumber} ({account.AccountCurrency})");
 			account.PrintTransactions();
 		}
-	}    
+	}
 }
 
 
@@ -80,7 +83,7 @@ public class Account
 	private string _accountNumber;
 	private string _accountCurrency;
 	private List<Transaction> _transactionList = new List<Transaction>();
-	
+
 	public string AccountCurrency
 	{
 		get
@@ -88,15 +91,15 @@ public class Account
 				return _accountCurrency;
 			}
 	}
-	
-	
+
+
 	public string AccountNumber
     {
         get
         {
             return _accountNumber;
         }
-        
+
         set
         {
             if(string.IsNullOrEmpty(value))
@@ -109,23 +112,23 @@ public class Account
 			}
             else
             {
-                _accountNumber = value;    
-            }			
+                _accountNumber = value;
+            }
         }
     }
-	
-	
+
+
 	public Account(string accountNumber, string accountCurrency)
 	{
 		AccountNumber = accountNumber;
 		_accountCurrency = accountCurrency;
 	}
-	
+
 	public void Deposit(double amount)
 	{
 		_transactionList.Add(new Transaction(amount, "deposit"));
 	}
-	
+
 	public void Withdraw(double amount)
 	{
 		double balance = CalculateBalance();
@@ -135,10 +138,10 @@ public class Account
 		}
 		else
 		{
-			_transactionList.Add(new Transaction(amount, "withdrawal"));	
-		}		
+			_transactionList.Add(new Transaction(amount, "withdrawal"));
+		}
 	}
-	
+
 	public void PrintTransactions()
 	{
 		Console.WriteLine($"Transactions for the account {_accountNumber}");
@@ -150,7 +153,7 @@ public class Account
 		Console.WriteLine("-----------------------");
 		Console.WriteLine($"Balance: {CalculateBalance()}");
 	}
-	
+
 	public double CalculateBalance()
 	{
 	    double balance = 0;
@@ -174,16 +177,16 @@ public class Transaction
 	private DateTime _timestamp;
 	private double _amount;
 	private string _type;
-	
+
 	public DateTime Timestamp{ get{return _timestamp;} }
 	public double Amount { get{return _amount;} }
 	public string Type { get{return _type;} }
-	
+
 	public Transaction(double amount, string type)
 	{
 		_timestamp = DateTime.Now;
 		_amount = amount;
-		_type = type;		
+		_type = type;
 	}
 }
 
@@ -200,21 +203,27 @@ public class Transfer
         _sourceAccount = sourceAccount;
         _targetAccount = targetAccount;
         _amount = amount;
+        Execute();
     }
 
     // Define the procedure of money transfer from one account to another
     public void Execute()
     {
-        if (_amount > _sourceAccount.CalculateBalance())
+        if (_sourceAccount.AccountCurrency != _targetAccount.AccountCurrency)
         {
-            Console.WriteLine($"Error: Insufficient funds for transfer of {_amount} {_sourceAccount.AccountCurrency}.");
-            return;
+            Console.WriteLine($"Error: account currencies are not the same! The attempted transfer is {_sourceAccount.AccountCurrency}, meanwhile the target account is {_targetAccount.AccountCurrency}");
         }
 
-        // Withdraw from source account and deposit to target account
-        _sourceAccount.Withdraw(_amount);
-        _targetAccount.Deposit(_amount);
-
-        Console.WriteLine($"Successfully transferred {_amount} {_sourceAccount.AccountCurrency} from account {_sourceAccount.AccountNumber} to account {_targetAccount.AccountNumber}.");
+        else if (_amount > _sourceAccount.CalculateBalance())
+        {
+            Console.WriteLine($"Error: Insufficient funds for transfer of {_amount} {_sourceAccount.AccountCurrency}.");
+        }
+        else
+        {
+            // Withdraw from source account and deposit to target account
+            _sourceAccount.Withdraw(_amount);
+            _targetAccount.Deposit(_amount);
+            Console.WriteLine($"Successfully transferred {_amount} {_sourceAccount.AccountCurrency} from account {_sourceAccount.AccountNumber} to account {_targetAccount.AccountNumber}.");
+        }
     }
 }
