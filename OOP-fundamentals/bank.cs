@@ -11,7 +11,10 @@ public class Bank
 		var client2 = new Client(1235, "Oskars", "Andersons");		
 		
 		client1.AddAccount(new Account("LV1234567899876", "EUR"));
-		client1.AddAccount(new Account("US1234567899875", "USD"));		
+		client1.AddAccount(new Account("US1234567899875", "USD"));
+		
+		client1.AccountList[1].Deposit(300);
+		
 		client1.AccountList[0].Deposit(1200);
 		client1.AccountList[0].Withdraw(6);
 		client1.AccountList[0].Withdraw(45);
@@ -20,8 +23,8 @@ public class Bank
 		
 		client2.AddAccount(new Account("LV1234567899147", "USD"));
 		
-		var transfer = new Transfer(client1.AccountList[0], client2.AccountList[0], 300);
-		transfer.Execute();
+		var transfer = new Transfer(client1.AccountList[1], client2.AccountList[0], 300);
+		//transfer.Execute();
 		
 		client1.PrintAccounts();
 		client2.PrintAccounts();
@@ -72,6 +75,27 @@ public class Client
 			account.PrintTransactions();
 		}
 	}    
+}
+
+
+public class LocalClient : Client
+{
+	private string _city;
+	
+	public LocalClient(int id, string name, string surname, string city) : base(id, name, surname)
+    {
+        _city = city;
+    }
+}
+
+public class ForeignClient : Client
+{
+	private string _country;
+
+	public ForeignClient(int id, string name, string surname, string country) : base(id, name, surname)
+    {
+        _country = country;
+    }
 }
 
 
@@ -148,7 +172,8 @@ public class Account
 		}
 		// Print balance
 		Console.WriteLine("-----------------------");
-		Console.WriteLine($"Balance: {CalculateBalance()}");
+		Console.WriteLine($"Balance: {CalculateBalance()}\n");
+		
 	}
 	
 	public double CalculateBalance()
@@ -200,12 +225,18 @@ public class Transfer
         _sourceAccount = sourceAccount;
         _targetAccount = targetAccount;
         _amount = amount;
+		Execute();
     }
 
     // Define the procedure of money transfer from one account to another
     public void Execute()
     {
-        if (_amount > _sourceAccount.CalculateBalance())
+        if (_sourceAccount.AccountCurrency != _targetAccount.AccountCurrency)
+		{
+			Console.WriteLine($"Error: account currencies are not the same!");
+			return;
+		}		
+		else if (_amount > _sourceAccount.CalculateBalance())
         {
             Console.WriteLine($"Error: Insufficient funds for transfer of {_amount} {_sourceAccount.AccountCurrency}.");
             return;
@@ -218,3 +249,4 @@ public class Transfer
         Console.WriteLine($"Successfully transferred {_amount} {_sourceAccount.AccountCurrency} from account {_sourceAccount.AccountNumber} to account {_targetAccount.AccountNumber}.");
     }
 }
+
