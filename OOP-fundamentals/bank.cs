@@ -7,8 +7,13 @@ public class Bank
     {
         Console.WriteLine ("Welcome to your Bank!");
         
-        var client1 = new Client(1234, "Anna", "Berzina");
-		var client2 = new Client(1235, "Oskars", "Andersons");		
+        var client1 = new LocalClient(1234, "Anna", "Berzina", "Talsi");
+		var client2 = new ForeignClient(1235, "Oskars", "Andersons", "UK");
+		
+		client1.RequestInfo();
+		client1.PrintClientType();
+		client2.RequestInfo();
+		client2.PrintClientType();
 		
 		client1.AddAccount(new Account("LV1234567899876", "EUR"));
 		client1.AddAccount(new Account("US1234567899875", "USD"));
@@ -35,9 +40,9 @@ public class Client
 {
     public static int numberOfClients = 0;
     
-    private int _id;
-    private string _name;
-    private string _surname;	
+    protected int _id;
+    protected string _name;
+    protected string _surname;	
 	private List<Account> _accountList = new List<Account>();
     
 	public List<Account> AccountList
@@ -56,7 +61,7 @@ public class Client
         _surname = surname;        
     }
     
-    public void RequestInfo()
+    public virtual void RequestInfo()
     {
         Console.WriteLine($"{_id} {_name} {_surname}");
     }
@@ -74,8 +79,14 @@ public class Client
 			Console.WriteLine($"Number: {account.AccountNumber} ({account.AccountCurrency})");
 			account.PrintTransactions();
 		}
-	}    
+	}
+	
+	public virtual void PrintClientType()
+	{
+		Console.WriteLine($"This is Client type object");
+	}
 }
+	
 
 
 public class LocalClient : Client
@@ -86,6 +97,11 @@ public class LocalClient : Client
     {
         _city = city;
     }
+	
+	public override void RequestInfo()
+	{
+		Console.WriteLine($"{_id} {_name} {_surname} {_city}");
+	}
 }
 
 public class ForeignClient : Client
@@ -96,6 +112,11 @@ public class ForeignClient : Client
     {
         _country = country;
     }
+	
+	public override void RequestInfo()
+	{
+		Console.WriteLine($"{_id} {_name} {_surname} {_country}");
+	}
 }
 
 
@@ -249,4 +270,3 @@ public class Transfer
         Console.WriteLine($"Successfully transferred {_amount} {_sourceAccount.AccountCurrency} from account {_sourceAccount.AccountNumber} to account {_targetAccount.AccountNumber}.");
     }
 }
-
