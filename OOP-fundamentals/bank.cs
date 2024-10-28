@@ -7,32 +7,32 @@ public class Bank
     {
         Console.WriteLine ("Welcome to your Bank!");
         
-	var client1 = new LocalClient(1234, "Anna", "Berzina", "Talsi");
-	var client2 = new ForeignClient(1235, "Oskars", "Andersons", "UK");
-	
-	client1.RequestInfo();
-	client1.PrintClientType();
-	client2.RequestInfo();
-	client2.PrintClientType();
-	
-	client1.AddAccount(new Account("LV1234567899876", "EUR"));
-	client1.AddAccount(new Account("US1234567899875", "USD"));
-	
-	client1.AccountList[1].Deposit(300);
-	
-	client1.AccountList[0].Deposit(1200);
-	client1.AccountList[0].Withdraw(6);
-	client1.AccountList[0].Withdraw(45);
-	client1.AccountList[0].Withdraw(270);
-	client1.AccountList[0].Withdraw(2000);
-	
-	client2.AddAccount(new Account("LV1234567899147", "USD"));
-	
-	var transfer = new Transfer(client1.AccountList[1], client2.AccountList[0], 300);
-	//transfer.Execute();
-	
-	client1.PrintAccounts();
-	client2.PrintAccounts();
+        var client1 = new LocalClient(1234, "Anna", "Berzina", "Talsi");
+		var client2 = new ForeignClient(1235, "Oskars", "Andersons", "UK");
+		
+		client1.RequestInfo();
+		client1.PrintClientType();
+		client2.RequestInfo();
+		client2.PrintClientType();
+		
+		client1.AddAccount(new Account("LV1234567899876", "EUR"));
+		client1.AddAccount(new Account("US1234567899875", "USD"));
+		
+		client1.AccountList[1].Deposit(300);
+		
+		client1.AccountList[0].Deposit(1200);
+		client1.AccountList[0].Withdraw(6);
+		client1.AccountList[0].Withdraw(45);
+		client1.AccountList[0].Withdraw(270);
+		client1.AccountList[0].Withdraw(2000);
+		
+		client2.AddAccount(new Account("LV1234567899147", "USD"));
+		
+		var transfer = new Transfer(client1.AccountList[1], client2.AccountList[0], 300);
+		//transfer.Execute();
+		
+		client1.PrintAccounts();
+		client2.PrintAccounts();
     }
 }
 
