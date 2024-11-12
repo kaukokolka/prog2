@@ -1,5 +1,9 @@
 # Learning SQLite
 
+### Case conventions
+
+![image](https://github.com/user-attachments/assets/56881301-bab0-4475-b318-7adc82dc32f9)
+
 ### Creating new table for Doctors
 
 ```SQL
@@ -23,11 +27,24 @@ VALUES
 
 ### Deleting rows (records) from the table
 ```SQL
-  DELETE FROM Doctors WHERE DoctorID > 10;
+DELETE FROM Doctors WHERE DoctorID > 10;
 ```
 
 ### Adding new calculated column to the query
 ```SQL
-  SELECT name, surname, multiplier, (multiplier * 100) AS NewMultiplier
-  FROM Doctors;
+SELECT name, surname, multiplier, (multiplier * 100) AS NewMultiplier
+FROM Doctors;
 ```
+
+### Adding new calculated field to the table
+```SQL
+ALTER TABLE Doctors
+ADD COLUMN Multiplier100 DECIMAL;
+UPDATE Doctors
+SET Multiplier100 = 100 * Multiplier;
+```
+
+### SQL Joins
+
+![image](https://github.com/user-attachments/assets/b89456a0-388c-4df9-a97f-990dae60f271)
+
