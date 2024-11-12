@@ -19,3 +19,17 @@ VALUES
 	('Oskars', 'Andersons', 0.5),
 	('Jenifere', 'Pottere', 3.2);
 ```
+
+### Deleting rows (records) from the table
+```SQL
+  DELETE FROM Doctors WHERE DoctorID > 10;
+```
+
+### Adding new calculated column to the query
+```SQL
+  SELECT name, surname, multiplier, (multiplier * 100) AS NewMultiplier
+  FROM Doctors;
+```
+
+### SQL Join
+![image](https://github.com/user-attachments/assets/a85bd696-9400-4996-a0eb-7cc0b6a3c2d1)
