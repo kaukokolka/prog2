@@ -10,3 +10,11 @@ CREATE TABLE Doctors (
   	Multiplier DECIMAL NOT NULL
 );
 ```
+### Inserting data into new table
+
+```SQL
+INSERT INTO Doctors (Name, Surname, Multiplier)
+Values ('Anna', 'Apse', 2),
+('Oskars', 'Andersons', 0.5),
+('Jenifere', 'Pottere', 3.2);
+```
