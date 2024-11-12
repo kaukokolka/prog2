@@ -14,7 +14,8 @@ CREATE TABLE Doctors (
 
 ```SQL
 INSERT INTO Doctors (Name, Surname, Multiplier)
-Values ('Anna', 'Apse', 2),
-('Oskars', 'Andersons', 0.5),
-('Jenifere', 'Pottere', 3.2);
+Values
+	('Anna', 'Apse', 2),
+	('Oskars', 'Andersons', 0.5),
+	('Jenifere', 'Pottere', 3.2);
 ```
