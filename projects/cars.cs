@@ -7,14 +7,10 @@ public class Program
 	{
 		// Init app
 		var app = new App("Data Source=mydatabase.db;");
-		app.NewCar(1, "Toyota Corolla", 15.0f, 0.7f);
+		app.NewCar(1, "Model Y", 15.0f, 0.7f);
 		app.NewClient(1, "Alice", "Smith", "alice.smith@example.com");
-
-		// Start a rental for client1 with car1
-		app.Rent(1, 1, "2024-12-20 15:30:00");
-
-		// End rental 1 with 120 km
-    	app.EndRental(1, 120);  
+		app.Rent(1, 1, "2024-12-20 15:30:00"); 		// Start a rental for client1 with car1
+    		app.EndRental(1, 120);  		// End rental 1 with 120 km
 	}
 }
 
@@ -227,7 +223,7 @@ public class App
 					
 					updateCommand.ExecuteNonQuery();
 				}
-				Console.WriteLine($"Rental with ID {rentId} has been successfully ended...");
+				Console.WriteLine($"Rental with ID {rentId} has been successfully ended...needs to calc sum(not finished)...");
 				//calculate sum and add it to Rentals DB
 			}
 		}
